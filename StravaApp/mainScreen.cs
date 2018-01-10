@@ -10,11 +10,17 @@ using System.Windows.Forms;
 
 namespace StravaApp
 {
-    public partial class Form1 : Form
+    public partial class mainScreen : Form
     {
-        public Form1()
+        public mainScreen()
         {
             InitializeComponent();
+        }
+
+        private void connectButton_Click(object sender, EventArgs e)
+        {
+            statusText.Text = stravaConnect.generate_Auth_url();
+            webBrowser1.Navigate(stravaConnect.generate_Auth_url());
         }
     }
 }
