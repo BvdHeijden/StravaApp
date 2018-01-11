@@ -9,12 +9,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Strava;
 using System.Net;
+using Strava.Authentication;
+using Strava.Clients;
+using Strava.Athletes;
 
 namespace StravaApp
 {
     public partial class mainScreen : Form
     {
-        public static string strava_Token;
+        public static string strava_Token="";
+        public static StaticAuthentication auth;
+        public static StravaClient client;
 
         public mainScreen()
         {
@@ -23,21 +28,25 @@ namespace StravaApp
 
         private void connectButton_Click(object sender, EventArgs e)
         {
-            textBox1.Text = stravaConnect.generate_Auth_url();
-            webBrowser1.Navigate(stravaConnect.generate_Auth_url());
-
+            stravaAuthForm authform = new stravaAuthForm();
+            authform.Show();
         }
 
-        private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        private async void finish_StravaConnection(string token)
         {
-            if (webBrowser1.Url.PathAndQuery.Contains("code="))
+            if (strava_Token.Length != 0)
             {
-                string code = webBrowser1.Url.Query.Substring(webBrowser1.Url.Query.IndexOf("code=") + 5);
+                auth = new StaticAuthentication(token);
+                client = new StravaClient(auth);
+                Athlete athlete = await client.Athletes.GetAthleteAsync();
 
-                strava_Token = stravaConnect.token_Exchange(code);
-
-                statusText.Text = strava_Token;
+                statusText.Text = "Hello " + athlete.FirstName + "!";
             }
+        }
+
+        private void checkButton_Click(object sender, EventArgs e)
+        {
+            finish_StravaConnection(strava_Token);
         }
     }
 }
