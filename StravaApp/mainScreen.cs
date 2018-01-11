@@ -12,6 +12,7 @@ using System.Net;
 using Strava.Authentication;
 using Strava.Clients;
 using Strava.Athletes;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace StravaApp
 {
@@ -24,6 +25,16 @@ namespace StravaApp
         public mainScreen()
         {
             InitializeComponent();
+
+            InitializeGoalData();
+        }
+
+        private void InitializeGoalData()
+        {
+            goalData.Columns.Add("maand", "maand");
+            goalData.Columns.Add("kms", "kilometers");
+            goalData.Rows.Add(12);
+
         }
 
         private void connectButton_Click(object sender, EventArgs e)
