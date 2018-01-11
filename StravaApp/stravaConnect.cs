@@ -9,8 +9,8 @@ namespace StravaApp
 {
     class stravaConnect
     {
-        static string client_id = ""; //Enter your own client id
-        static string client_secret = ""; //Enter your own client secret
+        static string client_id = "14016"; //Enter your own client id
+        static string client_secret = "a1a6de6b21ea0792a4b1b2a1939aa2c95acc1c27"; //Enter your own client secret
 
         internal static string generate_Auth_url()
         {
