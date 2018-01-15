@@ -28,6 +28,14 @@ namespace StravaApp
         {
             InitializeComponent();
 
+            strava_Token = mainSettings.Default.strava_Token;
+
+            if (strava_Token.Length > 0)
+            {
+                pictureBox1.Visible = false;
+                finish_StravaConnection(strava_Token);
+            }
+
             InitializeGoalData();
         }
 

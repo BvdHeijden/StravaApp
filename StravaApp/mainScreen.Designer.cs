@@ -72,7 +72,7 @@
             this.checkButton.Name = "checkButton";
             this.checkButton.Size = new System.Drawing.Size(75, 23);
             this.checkButton.TabIndex = 4;
-            this.checkButton.Text = "check connection";
+            this.checkButton.Text = "chart";
             this.checkButton.UseVisualStyleBackColor = true;
             this.checkButton.Click += new System.EventHandler(this.checkButton_Click);
             // 

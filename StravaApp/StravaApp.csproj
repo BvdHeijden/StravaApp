@@ -61,6 +61,11 @@
     <Compile Include="mainScreen.Designer.cs">
       <DependentUpon>mainScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="mainSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>mainSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="stravaAuthForm.cs">
@@ -85,6 +90,10 @@
     <EmbeddedResource Include="stravaAuthForm.resx">
       <DependentUpon>stravaAuthForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="mainSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>mainSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

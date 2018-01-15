@@ -60,6 +60,8 @@ namespace StravaApp
                 }
             }
 
+            mainSettings.Default.strava_Token = strava_Token;
+            mainSettings.Default.Save();
             return strava_Token;
         }
     }
