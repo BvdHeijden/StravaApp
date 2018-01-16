@@ -34,7 +34,7 @@ namespace StravaApp
             httpWebRequest.Method = "POST";
             httpWebRequest.Timeout = 5000;
 
-            // build the url encoded form post data
+            // build the url encoded from post data
             string postData = string.Format("client_id={0}&client_secret={1}&code={2}", client_id, client_secret, code);
             byte[] bytes = aSCIIEncoding.GetBytes(postData);
 
