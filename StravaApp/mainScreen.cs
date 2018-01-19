@@ -29,6 +29,7 @@ namespace StravaApp
             InitializeComponent();
 
             strava_Token = mainSettings.Default.strava_Token;
+            goalControl.Value = mainSettings.Default.yearGoal;
 
             if (strava_Token.Length > 0)
             {
@@ -36,15 +37,8 @@ namespace StravaApp
                 finish_StravaConnection(strava_Token);
             }
 
-            InitializeGoalData();
         }
 
-        private void InitializeGoalData()
-        {
-            goalData.Columns.Add("maand", "maand");
-            goalData.Columns.Add("kms", "kilometers");
-            goalData.Rows.Add(12);
-        }
 
         private void connectButton_Click(object sender, EventArgs e)
         {
@@ -104,6 +98,7 @@ namespace StravaApp
                 }
             }
 
+
             makeChart(stravaMiles);
         }
 
@@ -119,6 +114,29 @@ namespace StravaApp
                 chart1.Series[y.ToString()].Points.AddXY(new DateTime(2000, 12, 31), stravaMiles[11, y - 2015]);
 
             }
+        }
+
+        private void goalControl_ValueChanged(object sender, EventArgs e)
+        {
+            mainSettings.Default.yearGoal = (int)goalControl.Value;
+            mainSettings.Default.Save();
+
+            updateChartGoal();
+        }
+
+        private void updateChartGoal()
+        {
+
+            chart1.Series["2018 Goal"].Points.Clear();
+
+            chart1.Series["2018 Goal"].Points.AddXY(new DateTime(2000, 1, 1), 0);
+
+            for (int a = 0; a <= 10; a++)
+            {
+                chart1.Series["2018 Goal"].Points.AddXY(new DateTime(2000, a + 2, 1),(float)goalControl.Value * (a + 1) / 12);
+            }
+
+            chart1.Series["2018 Goal"].Points.AddXY(new DateTime(2000, 12, 31), (float)goalControl.Value);
         }
     }
 }

@@ -37,13 +37,13 @@ namespace StravaApp {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string _temp {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int yearGoal {
             get {
-                return ((string)(this["_temp"]));
+                return ((int)(this["yearGoal"]));
             }
             set {
-                this["_temp"] = value;
+                this["yearGoal"] = value;
             }
         }
     }
