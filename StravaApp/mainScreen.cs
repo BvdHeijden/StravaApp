@@ -35,6 +35,7 @@ namespace StravaApp
             {
                 pictureBox1.Visible = false;
                 finish_StravaConnection(strava_Token);
+                getStravaMiles();
             }
 
         }
@@ -60,7 +61,7 @@ namespace StravaApp
 
         private void checkButton_Click(object sender, EventArgs e)
         {
-            finish_StravaConnection(strava_Token);
+            //finish_StravaConnection(strava_Token);
             getStravaMiles();
         }
 
@@ -110,6 +111,9 @@ namespace StravaApp
                 for (int m = 1; m <= 11; m++)
                 {
                     chart1.Series[y.ToString()].Points.AddXY(new DateTime(2000, m + 1, 1), stravaMiles[m - 1, y - 2015]);
+
+                    if (stravaMiles[11, y - 2015] == stravaMiles[m - 1, y - 2015]) { break; }
+                    
                 }
                 chart1.Series[y.ToString()].Points.AddXY(new DateTime(2000, 12, 31), stravaMiles[11, y - 2015]);
 
