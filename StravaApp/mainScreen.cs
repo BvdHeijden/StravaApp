@@ -101,6 +101,7 @@ namespace StravaApp
 
 
             makeChart(stravaMiles);
+            //makeChartDetailed();
         }
 
         private void makeChart(float[,] stravaMiles)
@@ -118,6 +119,31 @@ namespace StravaApp
                 chart1.Series[y.ToString()].Points.AddXY(new DateTime(2000, 12, 31), stravaMiles[11, y - 2015]);
 
             }
+        }
+
+        private void makeChartDetailed()
+        {
+            List<ActivitySummary> activities = new List<ActivitySummary>();
+
+            try
+            {
+                activities = client.Activities.GetActivities(new DateTime(2011, 1, 1), DateTime.Now);
+
+            }
+            catch (Exception e)
+            {
+            }
+
+            foreach(var activity in activities)
+            {
+                if (activity.Type == ActivityType.Ride)
+                {
+                    string year = activity.DateTimeStartLocal.ToString("yyyy");
+                    chart1.Series[year].Points.AddXY(activity.DateTimeStartLocal, activity.Distance / 1000);
+
+                }
+            }
+
         }
 
         private void goalControl_ValueChanged(object sender, EventArgs e)
