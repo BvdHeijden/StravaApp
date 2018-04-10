@@ -35,7 +35,8 @@ namespace StravaApp
             {
                 pictureBox1.Visible = false;
                 finish_StravaConnection(strava_Token);
-                getStravaMiles();
+                //getStravaMiles();
+                makeChartDetailed();
             }
 
         }
@@ -62,7 +63,8 @@ namespace StravaApp
         private void checkButton_Click(object sender, EventArgs e)
         {
             //finish_StravaConnection(strava_Token);
-            getStravaMiles();
+            //getStravaMiles();
+            makeChartDetailed();
         }
 
         private void getStravaMiles()
@@ -124,26 +126,25 @@ namespace StravaApp
         private void makeChartDetailed()
         {
             List<ActivitySummary> activities = new List<ActivitySummary>();
-
-            try
+            for(int year = 2015; year <= DateTime.Now.Year; year++)
             {
-                activities = client.Activities.GetActivities(new DateTime(2011, 1, 1), DateTime.Now);
-
-            }
-            catch (Exception e)
-            {
-            }
-
-            foreach(var activity in activities)
-            {
-                if (activity.Type == ActivityType.Ride)
+                try
                 {
-                    string year = activity.DateTimeStartLocal.ToString("yyyy");
-                    chart1.Series[year].Points.AddXY(activity.DateTimeStartLocal, activity.Distance / 1000);
+                    activities = client.Activities.GetActivities(new DateTime(year, 1, 1), new DateTime(year, 12, 31));
+                }
+                catch(Exception e) { }
 
+                float totaldist = 0;
+
+                foreach(var activity in activities)
+                {
+                    if (activity.Type == ActivityType.Ride)
+                    {
+                        totaldist += activity.Distance / 1000;
+                        chart1.Series[year.ToString()].Points.AddXY(activity.DateTimeStartLocal, totaldist);
+                    }
                 }
             }
-
         }
 
         private void goalControl_ValueChanged(object sender, EventArgs e)
@@ -151,7 +152,7 @@ namespace StravaApp
             mainSettings.Default.yearGoal = (int)goalControl.Value;
             mainSettings.Default.Save();
 
-            updateChartGoal();
+            //updateChartGoal();
         }
 
         private void updateChartGoal()
