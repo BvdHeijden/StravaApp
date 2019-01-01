@@ -35,8 +35,7 @@ namespace StravaApp
             {
                 pictureBox1.Visible = false;
                 finish_StravaConnection(strava_Token);
-                //getStravaMiles();
-                //makeChartDetailed();
+                makeChartDetailed();
             }
 
         }
@@ -65,7 +64,7 @@ namespace StravaApp
             makeChartDetailed();
         }
 
-        private void makeChartDetailed()
+        private async void makeChartDetailed()
         {
             List<ActivitySummary> activities = new List<ActivitySummary>();
             for(int year = 2015; year <= DateTime.Now.Year; year++)
@@ -78,7 +77,7 @@ namespace StravaApp
                 chart1.Series.Add(newLine);
                 float yeardist = 0;
 
-                try{activities = client.Activities.GetActivities(new DateTime(year, 1, 1), new DateTime(year + 1, 1, 1));} catch(Exception e) { }
+                try{activities = await client.Activities.GetActivitiesAsync(new DateTime(year, 1, 1), new DateTime(year + 1, 1, 1));} catch(Exception e) { MessageBox.Show(e.Message); }
 
                 activities.Reverse();
 
@@ -89,6 +88,7 @@ namespace StravaApp
                         yeardist += ride.Distance / 1000;
                         int date = Convert.ToDateTime(ride.StartDate).DayOfYear;
                         chart1.Series[year.ToString()].Points.AddXY(date, yeardist);
+                        this.Refresh();
                     }
                 }
 
