@@ -36,7 +36,7 @@ namespace StravaApp
                 pictureBox1.Visible = false;
                 finish_StravaConnection(strava_Token);
                 //getStravaMiles();
-                makeChartDetailed();
+                //makeChartDetailed();
             }
 
         }
@@ -62,65 +62,7 @@ namespace StravaApp
 
         private void checkButton_Click(object sender, EventArgs e)
         {
-            //finish_StravaConnection(strava_Token);
-            //getStravaMiles();
             makeChartDetailed();
-        }
-
-        private void getStravaMiles()
-        {
-            float[,] stravaMiles = new float[12, 5];
-
-            List<ActivitySummary> activities = new List<ActivitySummary>();
-
-            try
-            {
-                activities = client.Activities.GetActivities(new DateTime(2011, 1, 1), DateTime.Now);
-
-            }
-            catch (Exception e)
-            {
-            }
-
-            foreach(var ride in activities)
-            {
-                if (ride.Type == ActivityType.Ride)
-                {
-                    int month = Int32.Parse(Convert.ToDateTime(ride.StartDate).ToString("MM"));
-                    int year = Int32.Parse(Convert.ToDateTime(ride.StartDate).ToString("yyyy"));
-
-                    stravaMiles[month-1, year - 2015] += ride.Distance/1000;
-                }
-            }
-
-            for(int y = 0; y <= 4; y++)
-            {
-                for(int m = 1; m <= 11; m++)
-                {
-                    stravaMiles[m, y] += stravaMiles[m - 1, y];
-                }
-            }
-
-
-            makeChart(stravaMiles);
-            //makeChartDetailed();
-        }
-
-        private void makeChart(float[,] stravaMiles)
-        {
-            for(int y = 2015; y <= 2018; y++)
-            {
-                chart1.Series[y.ToString()].Points.AddXY(new DateTime(2000, 1, 1), 0);
-                for (int m = 1; m <= 11; m++)
-                {
-                    chart1.Series[y.ToString()].Points.AddXY(new DateTime(2000, m + 1, 1), stravaMiles[m - 1, y - 2015]);
-
-                    if (stravaMiles[11, y - 2015] == stravaMiles[m - 1, y - 2015]) { break; }
-                    
-                }
-                chart1.Series[y.ToString()].Points.AddXY(new DateTime(2000, 12, 31), stravaMiles[11, y - 2015]);
-
-            }
         }
 
         private void makeChartDetailed()
@@ -128,22 +70,29 @@ namespace StravaApp
             List<ActivitySummary> activities = new List<ActivitySummary>();
             for(int year = 2015; year <= DateTime.Now.Year; year++)
             {
-                try
-                {
-                    activities = client.Activities.GetActivities(new DateTime(year, 1, 1), new DateTime(year, 12, 31));
-                }
-                catch(Exception e) { }
+                Series newLine = new Series();
+                newLine.ChartType = SeriesChartType.Line;
+                newLine.BorderWidth = 3;
+                newLine.Name = year.ToString();
 
-                float totaldist = 0;
+                chart1.Series.Add(newLine);
+                float yeardist = 0;
 
-                foreach(var activity in activities)
+                try{activities = client.Activities.GetActivities(new DateTime(year, 1, 1), new DateTime(year + 1, 1, 1));} catch(Exception e) { }
+
+                activities.Reverse();
+
+                foreach(var ride in activities)
                 {
-                    if (activity.Type == ActivityType.Ride)
+                    if (ride.Type == ActivityType.Ride)
                     {
-                        totaldist += activity.Distance / 1000;
-                        chart1.Series[year.ToString()].Points.AddXY(activity.DateTimeStartLocal, totaldist);
+                        yeardist += ride.Distance / 1000;
+                        int date = Convert.ToDateTime(ride.StartDate).DayOfYear;
+                        chart1.Series[year.ToString()].Points.AddXY(date, yeardist);
                     }
                 }
+
+                chart1.Series[year.ToString()].Points.AddXY(366, yeardist);
             }
         }
 
@@ -152,22 +101,7 @@ namespace StravaApp
             mainSettings.Default.yearGoal = (int)goalControl.Value;
             mainSettings.Default.Save();
 
-            //updateChartGoal();
         }
 
-        private void updateChartGoal()
-        {
-
-            chart1.Series["2018 Goal"].Points.Clear();
-
-            chart1.Series["2018 Goal"].Points.AddXY(new DateTime(2000, 1, 1), 0);
-
-            for (int a = 0; a <= 10; a++)
-            {
-                chart1.Series["2018 Goal"].Points.AddXY(new DateTime(2000, a + 2, 1),(float)goalControl.Value * (a + 1) / 12);
-            }
-
-            chart1.Series["2018 Goal"].Points.AddXY(new DateTime(2000, 12, 31), (float)goalControl.Value);
-        }
     }
 }
