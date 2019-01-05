@@ -55,7 +55,7 @@ namespace StravaApp
                 client = new StravaClient(auth);
                 Athlete athlete = await client.Athletes.GetAthleteAsync();
 
-                statusText.Text = "Hello " + athlete.FirstName + "!";
+                statusText.Text = "Hello " + athlete.FirstName;
             }
         }
 
@@ -75,6 +75,7 @@ namespace StravaApp
                 newLine.Name = year.ToString();
 
                 chart1.Series.Add(newLine);
+                chart1.Series[year.ToString()].Points.AddXY(0, 0);
                 float yeardist = 0;
 
                 try{activities = await client.Activities.GetActivitiesAsync(new DateTime(year, 1, 1), new DateTime(year + 1, 1, 1));} catch(Exception e) { MessageBox.Show(e.Message); }
@@ -92,7 +93,15 @@ namespace StravaApp
                     }
                 }
 
-                chart1.Series[year.ToString()].Points.AddXY(366, yeardist);
+                if (year == DateTime.Now.Year)
+                {
+                    chart1.Series[year.ToString()].Points.AddXY(DateTime.Now.DayOfYear, yeardist);
+                }
+                else
+                {
+                    chart1.Series[year.ToString()].Points.AddXY(366, yeardist);
+                }
+                
             }
         }
 
